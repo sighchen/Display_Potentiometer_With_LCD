@@ -13,40 +13,39 @@ void setup() {
   // 設定 LCD 的行列數目 (2 x 16)
   lcd.begin(16, 2);
   Serial.println("Define the Maximum value of Potentiometer :");
-  MAX = Maximum_Set_up(loop_x , comdata); 
+  MAX = Maximum_Set_up(loop_x , comdata); //執行副程式，設定可變電阻最大值
   lcd.print("Potentiometer");
 }
 void loop() {
   long M2R =MAX.toInt();
-  Serial.print(M2R);
-  float sensorValue = analogRead(A0);
+  float sensorValue = analogRead(A0); //取得可變電阻(0~1023)
   float Display_ohm;
   long Resistance = M2R;
   lcd.setCursor(0, 1);
-  Display_ohm = Get_ohm(sensorValue,Resistance);
+  Display_ohm = Get_ohm(sensorValue,Resistance);//執行副程式，獲得電阻值
   lcd.print(Display_ohm);
   lcd.print("ohm");
   delay(100);
 }
 
   String Maximum_Set_up(int z ,String Data){
-  while(z == 1){ 
+  while(z == 1){ //Enable infinite loop 
   if (Serial.available() > 0){
-        Data += char(Serial.read());
+        Data += char(Serial.read()); 
         delay(2);
    }
-    else if (Data.length() > 0){
+    else if (Data.length() > 0){//若有文字輸入
         Serial.println(Data);
-        return Data;
-        Data = "";
-        z--;
+        return Data;//回傳Data植
+        Data = "";//Clear Data
+        z--;//Disable infinite loop
    }
   }
 }
    float Get_ohm(float x,float y){
    float voltage,Ohm;
    voltage = x / 1023.0 *5.0;
-   Ohm = y / (5/voltage) ;
+   Ohm = y / (5/voltage) ;//利用比值求出電阻值
    return Ohm;
 }
   
